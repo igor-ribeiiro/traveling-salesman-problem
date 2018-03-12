@@ -4,6 +4,7 @@
 #include <vector>
 #include <bits/stdc++.h>
 
+//#define CHAR_DEBUG
 
 #define INF 1000000000
 
@@ -11,17 +12,34 @@ using namespace std;
 
 typedef pair<int, int> ii;
 
+class Debugger {
+public:
+#ifdef CHAR_DEBUG
+
+    static char convertIntToChar(int x) {
+        return (char)(x-'a'-1);
+    }
+
+#else
+    static int convertIntToChar(int x) {
+        return x;
+    }
+#endif
+
+};
 
 class Node {
 public:
     Node() {
         this->x = 0;
         this->y = 0;
+        this->ind = -1;
     }
 
-    Node(int x, int y) {
+    Node(int x, int y, int ind) {
         this->x = x;
         this->y = y;
+        this->ind = ind;
     }
 
     void addAdjs(Node *n) {
@@ -33,6 +51,10 @@ public:
         int yd = y - n->getY();
 
         return (int)(sqrt(xd*xd + yd*yd) + 0.5);
+    }
+
+    int getInd() {
+        return ind;
     }
 
     int getX(){
@@ -53,6 +75,7 @@ public:
 
 private:
     int x, y;
+    int ind;
     vector<Node*> adjs;
 };
 
@@ -93,7 +116,7 @@ public:
             while (!input.eof()) {
                 int i, x, y;
                 input >> i >> x >> y;
-                nodes[i] = new Node(x, y);
+                nodes[i] = new Node(x, y, i);
             }
 
             dist.resize((unsigned long) n+1);
@@ -126,7 +149,6 @@ public:
         int cost[n+1]; // The minimum cost for one subtree to a given vertice
         int inSubTree[n+1]; // Checks if a given vertice is already on the prim's subtree
         priority_queue<ii, vector<ii>, greater<ii> > pq;
-
 
         for(int i = 1; i <= n; i ++) {
             inSubTree[i] = false;
@@ -162,15 +184,28 @@ public:
     }
 
     void printAllNodes() {
+        cout << endl;
+
         for(int i = 1; i <= n; i ++) {
 
-            cout << "Node #" << i << ": ";
+            cout << "Node #" << (char)(i+'a'-1) << ": ";
             nodes[i]->print();
-            cout << endl;
+            cout << ", with adjs = ";
+
+            for(int j = 0; j < nodes[i]->getAdjs().size(); j ++) {
+                if(j != nodes[i]->getAdjs().size()-1)
+                    cout << (char)(nodes[i]->getAdjs()[j]->getInd()+'a'-1) << " ";
+                else
+                    cout << (char)(nodes[i]->getAdjs()[j]->getInd()+'a'-1) << endl;
+            }
         }
+
+        cout << endl;
     }
 
     void printAllDists() {
+        cout << endl;
+        cout << "Printing all dists" << endl;
         cout << "  ";
         for(int i = 1; i <= n; i ++) {
             if(i != n)
@@ -188,12 +223,6 @@ public:
                     cout << dist[i][j] << endl;
             }
         }
-
-//        for(int i = 1; i <= n; i ++) {
-//            for(int j = 1; j <= n; j ++) {
-//                cout << "dist[" << i << "][" << j << "] = " << dist[i][j] << endl;
-//            }
-//        }
     }
 
     void printAllEdges() {
@@ -216,10 +245,11 @@ int main() {
     ios_base::sync_with_stdio(false);
 
     Graph graph = Graph("input.txt");
-//    graph.printAllNodes();
-    graph.printAllDists();
     graph.prim();
+    graph.printAllDists();
+
     graph.printAllEdges();
+    graph.printAllNodes();
 
 
     return 0;

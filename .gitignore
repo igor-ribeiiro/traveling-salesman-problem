@@ -1,6 +1,12 @@
 # Prerequisites
 *.d
 
+# IDE
+.idea
+cmake-build-debug
+Lab-Exame.pdf
+PremissasÉticas.pdf
+
 # Compiled Object files
 *.slo
 *.lo

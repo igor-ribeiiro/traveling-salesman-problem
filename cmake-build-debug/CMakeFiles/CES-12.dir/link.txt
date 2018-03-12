@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/CES-12.dir/main.cpp.o  -o CES-12 

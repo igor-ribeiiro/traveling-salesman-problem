@@ -17,17 +17,15 @@ public:
     Node() {
         this->x = 0;
         this->y = 0;
-        adj = nullptr;
     }
 
     Node(int x, int y) {
         this->x = x;
         this->y = y;
-        adj = nullptr;
     }
 
-    void addAdj(Node *n) {
-        adj = n;
+    void addAdjs(Node *n) {
+        adjs.push_back(n);
     }
 
     int dist(Node *n) {
@@ -45,8 +43,8 @@ public:
         return y;
     }
 
-    Node* getAdj() {
-        return adj;
+    vector<Node*> getAdjs() {
+        return adjs;
     }
 
     void print() {
@@ -55,7 +53,7 @@ public:
 
 private:
     int x, y;
-    Node *adj;
+    vector<Node*> adjs;
 };
 
 class Edge {
@@ -157,6 +155,8 @@ public:
 
         for(int i = 2; i <= n; i ++) {
             edges.emplace_back(Edge(i, parent[i], dist[i][parent[i]]));
+            nodes[i]->addAdjs(nodes[parent[i]]);
+            nodes[parent[i]]->addAdjs(nodes[i]);
         }
 
     }

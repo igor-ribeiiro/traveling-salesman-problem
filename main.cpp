@@ -2,10 +2,15 @@
 #include <cmath>
 #include<fstream>
 #include <vector>
+#include <bits/stdc++.h>
+
 
 #define INF 1000000000
 
 using namespace std;
+
+typedef pair<int, int> ii;
+
 
 class Node {
 public:
@@ -54,14 +59,33 @@ private:
 };
 
 class Edge {
-    Edge
+public:
+    Edge(int i, int j, int tam) {
+        vertices = make_pair(i, j);
+        this->tam = tam;
+    }
+
+    ii getVertices() {
+        return vertices;
+    }
+
+    int getTam() {
+        return tam;
+    }
+
+private:
+    ii vertices;
+    int tam;
 };
 
 class Graph {
 public:
-    Graph() {
+    Graph(const string &fileName) {
         ifstream input;
-        input.open("../input.txt");
+        string file = "../" + fileName;
+        input.open(file);
+
+        n = 0;
 
         if (input.is_open()) {
             input >> n;
@@ -93,21 +117,48 @@ public:
     ~Graph () {
         for(int i = 0; i <= n; i ++) {
             dist[i].clear();
-            nodes.clear();
+            delete(nodes[i]);
         }
         dist.clear();
+        nodes.clear();
+        edges.clear();
     }
 
     void prim() {
         int cost[n+1]; // The minimum cost for one subtree to a given vertice
-        bool inSubTree[n+1]; // Checks if a given vertice is already on the prim's subtree
+        int inSubTree[n+1]; // Checks if a given vertice is already on the prim's subtree
+        priority_queue<ii, vector<ii>, greater<ii> > pq;
 
-        for(int i=1; i <= n; i ++) {
-            cost[i] = INF;
+
+        for(int i = 1; i <= n; i ++) {
             inSubTree[i] = false;
+            cost[i] = INF;
         }
-        cost[1] = 0;
         inSubTree[1] = true;
+        pq.push(make_pair(cost[1], 1));
+        int parent[n+1];
+
+        while(!pq.empty()) {
+            ii p = pq.top();
+            pq.pop();
+            int d = p.first;
+            int u = p.second;
+
+            inSubTree[u] = true;
+
+            for(int v = 1; v <= n; v ++) {
+                if(!inSubTree[v] && cost[v] > dist[u][v]) {
+                    cost[v] = dist[u][v];
+                    pq.push(make_pair(cost[v], v));
+                    parent[v] = u;
+                }
+            }
+        }
+
+        for(int i = 2; i <= n; i ++) {
+            edges.emplace_back(Edge(i, parent[i], dist[i][parent[i]]));
+        }
+
     }
 
     void printAllNodes() {
@@ -120,13 +171,40 @@ public:
     }
 
     void printAllDists() {
+        cout << "   ";
         for(int i = 1; i <= n; i ++) {
+            if(i != n)
+                cout << (char)(i+'a'-1) << " ";
+            else
+                cout << (char)(i+'a'-1) << endl;
+        }
+
+        for(int i = 1; i <= n; i ++) {
+            cout << (char)(i+'a'-1) << " ";
             for(int j = 1; j <= n; j ++) {
-                cout << "dist[" << i << "][" << j << "] = " << dist[i][j] << endl;
+                if(j != n)
+                    cout << dist[i][j] << " ";
+                else
+                    cout << dist[i][j] << endl;
             }
         }
+
+//        for(int i = 1; i <= n; i ++) {
+//            for(int j = 1; j <= n; j ++) {
+//                cout << "dist[" << i << "][" << j << "] = " << dist[i][j] << endl;
+//            }
+//        }
     }
 
+    void printAllEdges() {
+        cout << endl << "Number of edges = " << edges.size() << endl;
+        for(int i = 0; i < edges.size(); i ++) {
+            cout << edges[i].getVertices().first << endl;
+            cout << "Edge #" << i+1 << ": " <<(char)(edges[i].getVertices().first + 'a' - 1) << " - "
+                 << (char)(edges[i].getVertices().second + 'a' - 1)
+                << " with distance = " << edges[i].getTam() << endl;
+        }
+    }
 
 private:
     int n;
@@ -138,10 +216,12 @@ private:
 int main() {
     ios_base::sync_with_stdio(false);
 
-    Graph graph = Graph();
-    graph.printAllNodes();
+    Graph graph = Graph("input.txt");
+//    graph.printAllNodes();
     graph.printAllDists();
     graph.prim();
+    graph.printAllEdges();
+
 
     return 0;
 }

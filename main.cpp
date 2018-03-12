@@ -198,7 +198,8 @@ public:
             visited[u] = true;
             visitedOrder.push_back(u);
 
-            for(int i = 0; i < (int)nodes[u]->getAdjs().size(); i ++) {
+            // Looping in reverse order to output the same solution as the one in the pdf
+            for(int i = (int)nodes[u]->getAdjs().size()-1; i >= 0; i --) {
                 int ind = nodes[u]->getAdjs()[i]->getInd();
 
                 if(!visited[ind]) {

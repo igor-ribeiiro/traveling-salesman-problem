@@ -183,6 +183,43 @@ public:
 
     }
 
+    void travelingSalesman() {
+        bool visited[n+1];
+        stack<int> pilha;
+
+        for(int i = 1; i <= n; i ++)
+            visited[i] = false;
+
+        pilha.push(1);
+
+        while(!pilha.empty()) {
+            int u = pilha.top();
+            pilha.pop();
+            visited[u] = true;
+            visitedOrder.push_back(u);
+
+            for(int i = 0; i < (int)nodes[u]->getAdjs().size(); i ++) {
+                int ind = nodes[u]->getAdjs()[i]->getInd();
+
+                if(!visited[ind]) {
+                    pilha.push(ind);
+                }
+            }
+        }
+        visitedOrder.push_back(1); // Going back to the beginning
+    }
+
+    void printBestPath() {
+        cout << endl;
+        for(int i = 0; i < (int)visitedOrder.size(); i ++) {
+            if(i != (int)visitedOrder.size()-1)
+                cout << Debugger::convertIntToChar(visitedOrder[i]) << "->";
+            else
+                cout << Debugger::convertIntToChar(visitedOrder[i]) << endl << endl;
+        }
+    }
+
+
     void printAllNodes() {
         cout << endl;
 
@@ -191,8 +228,8 @@ public:
             nodes[i]->print();
             cout << ", with adjs = ";
 
-            for(int j = 0; j < nodes[i]->getAdjs().size(); j ++) {
-                if(j != nodes[i]->getAdjs().size()-1)
+            for(int j = 0; j < (int)nodes[i]->getAdjs().size(); j ++) {
+                if(j != (int)nodes[i]->getAdjs().size()-1)
                     cout << Debugger::convertIntToChar(nodes[i]->getAdjs()[j]->getInd()) << " ";
                 else
                     cout << Debugger::convertIntToChar(nodes[i]->getAdjs()[j]->getInd()) << endl;
@@ -225,8 +262,8 @@ public:
     }
 
     void printAllEdges() {
-        cout << endl << "Number of edges = " << edges.size() << endl;
-        for(int i = 0; i < edges.size(); i ++) {
+        cout << endl << "Number of edges = " << (int)edges.size() << endl;
+        for(int i = 0; i < (int)edges.size(); i ++) {
             cout << "Edge #" << i+1 << ": " <<Debugger::convertIntToChar(edges[i].getVertices().first) << " - "
                  << Debugger::convertIntToChar(edges[i].getVertices().second)
                 << " with distance = " << edges[i].getTam() << endl;
@@ -238,7 +275,9 @@ private:
     vector<Node*> nodes;
     vector<Edge> edges;
     vector<vector<int> > dist;
+    vector<int> visitedOrder;
 };
+
 
 int main() {
     ios_base::sync_with_stdio(false);
@@ -246,10 +285,11 @@ int main() {
     Graph graph = Graph("input.txt");
     graph.prim();
     graph.printAllDists();
-
     graph.printAllEdges();
     graph.printAllNodes();
 
+    graph.travelingSalesman();
+    graph.printBestPath();
 
     return 0;
 }

@@ -4,7 +4,7 @@
 #include <vector>
 #include <bits/stdc++.h>
 
-//#define CHAR_DEBUG
+#define CHAR_DEBUG
 
 #define INF 1000000000
 
@@ -17,7 +17,7 @@ public:
 #ifdef CHAR_DEBUG
 
     static char convertIntToChar(int x) {
-        return (char)(x-'a'-1);
+        return (char)(x+'a'-1);
     }
 
 #else
@@ -187,16 +187,15 @@ public:
         cout << endl;
 
         for(int i = 1; i <= n; i ++) {
-
-            cout << "Node #" << (char)(i+'a'-1) << ": ";
+            cout << "Node #" << Debugger::convertIntToChar(i) << ": ";
             nodes[i]->print();
             cout << ", with adjs = ";
 
             for(int j = 0; j < nodes[i]->getAdjs().size(); j ++) {
                 if(j != nodes[i]->getAdjs().size()-1)
-                    cout << (char)(nodes[i]->getAdjs()[j]->getInd()+'a'-1) << " ";
+                    cout << Debugger::convertIntToChar(nodes[i]->getAdjs()[j]->getInd()) << " ";
                 else
-                    cout << (char)(nodes[i]->getAdjs()[j]->getInd()+'a'-1) << endl;
+                    cout << Debugger::convertIntToChar(nodes[i]->getAdjs()[j]->getInd()) << endl;
             }
         }
 
@@ -209,13 +208,13 @@ public:
         cout << "  ";
         for(int i = 1; i <= n; i ++) {
             if(i != n)
-                cout << (char)(i+'a'-1) << " ";
+                cout << Debugger::convertIntToChar(i) << " ";
             else
-                cout << (char)(i+'a'-1) << endl;
+                cout << Debugger::convertIntToChar(i) << endl;
         }
 
         for(int i = 1; i <= n; i ++) {
-            cout << (char)(i+'a'-1) << " ";
+            cout << Debugger::convertIntToChar(i) << " ";
             for(int j = 1; j <= n; j ++) {
                 if(j != n)
                     cout << dist[i][j] << " ";
@@ -228,8 +227,8 @@ public:
     void printAllEdges() {
         cout << endl << "Number of edges = " << edges.size() << endl;
         for(int i = 0; i < edges.size(); i ++) {
-            cout << "Edge #" << i+1 << ": " <<(char)(edges[i].getVertices().first + 'a' - 1) << " - "
-                 << (char)(edges[i].getVertices().second + 'a' - 1)
+            cout << "Edge #" << i+1 << ": " <<Debugger::convertIntToChar(edges[i].getVertices().first) << " - "
+                 << Debugger::convertIntToChar(edges[i].getVertices().second)
                 << " with distance = " << edges[i].getTam() << endl;
         }
     }

@@ -171,7 +171,7 @@ public:
     }
 
     void printAllDists() {
-        cout << "   ";
+        cout << "  ";
         for(int i = 1; i <= n; i ++) {
             if(i != n)
                 cout << (char)(i+'a'-1) << " ";
@@ -199,7 +199,6 @@ public:
     void printAllEdges() {
         cout << endl << "Number of edges = " << edges.size() << endl;
         for(int i = 0; i < edges.size(); i ++) {
-            cout << edges[i].getVertices().first << endl;
             cout << "Edge #" << i+1 << ": " <<(char)(edges[i].getVertices().first + 'a' - 1) << " - "
                  << (char)(edges[i].getVertices().second + 'a' - 1)
                 << " with distance = " << edges[i].getTam() << endl;

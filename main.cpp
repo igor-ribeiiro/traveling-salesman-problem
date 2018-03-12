@@ -101,6 +101,7 @@ private:
 
 class Graph {
 public:
+    Graph(){}
     Graph(const string &fileName) {
         ifstream input;
         string file = "../" + fileName;
@@ -283,14 +284,20 @@ private:
 int main() {
     ios_base::sync_with_stdio(false);
 
-    Graph graph = Graph("input.txt");
-    graph.prim();
-    graph.printAllDists();
-    graph.printAllEdges();
-    graph.printAllNodes();
+    Graph *graph;
+    for(int i = 0; i < (int)INF; i ++) {
+        cout << "Execution i = " << i+1 << endl;
+        graph = new Graph("input.txt");
 
-    graph.travelingSalesman();
-    graph.printBestPath();
+        graph->prim();
+//        graph.printAllDists();
+//        graph.printAllEdges();
+//        graph.printAllNodes();
 
-    return 0;
+        graph->travelingSalesman();
+        graph->printBestPath();
+
+        delete(graph);
+    }
+.    return 0;
 }

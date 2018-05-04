@@ -36,7 +36,7 @@ public:
         this->ind = -1;
     }
 
-    Node(int x, int y, int ind) {
+    Node(float x, float y, int ind) {
         this->x = x;
         this->y = y;
         this->ind = ind;
@@ -47,8 +47,8 @@ public:
     }
 
     int dist(Node *n) {
-        int xd = x - n->getX();
-        int yd = y - n->getY();
+        float xd = x - n->getX();
+        float yd = y - n->getY();
 
         return (int)(sqrt(xd*xd + yd*yd) + 0.5);
     }
@@ -57,11 +57,11 @@ public:
         return ind;
     }
 
-    int getX(){
+    float getX(){
         return x;
     }
 
-    int getY() {
+    float getY() {
         return y;
     }
 
@@ -74,7 +74,7 @@ public:
     }
 
 private:
-    int x, y;
+    float x, y;
     int ind;
     vector<Node*> adjs;
 };
@@ -101,7 +101,6 @@ private:
 
 class Graph {
 public:
-    Graph(){}
     Graph(const string &fileName) {
         ifstream input;
         string file = "../" + fileName;
@@ -113,11 +112,12 @@ public:
             input >> n;
 
             nodes.resize((unsigned long) n+1);
-
-            while (!input.eof()) {
-                int i, x, y;
-                input >> i >> x >> y;
-                nodes[i] = new Node(x, y, i);
+            if(n != 0) {
+                while (!input.eof()) {
+                    float i, x, y;
+                    input >> i >> x >> y;
+                    nodes[i] = new Node(x, y, i);
+                }
             }
 
             dist.resize((unsigned long) n+1);
@@ -229,6 +229,13 @@ public:
         output.close();
     }
 
+    void getBestCost(const string &fileName) {
+        ofstream output("../" + fileName, std::ofstream::out | std::ofstream::app);
+
+
+        output.close();
+    }
+
     void printAllNodes() {
         cout << endl;
 
@@ -290,11 +297,19 @@ private:
 
 int main() {
     ios_base::sync_with_stdio(false);
-
+    string outputFile = "output.txt";
     Graph *graph;
-    for(int i = 0; i < 1; i ++) {
-        cout << "Execution i = " << i+1 << endl;
-        graph = new Graph("input.txt");
+    for(int i = 1; i < 100; i ++) {
+        cout << "Execution i = " << i << endl;
+        string entrada = "tests/ent";
+        if(i < 10) {
+            entrada += "0";
+        }
+        entrada += to_string(i);
+        entrada += ".txt";
+
+        cout << "Entrada = " << entrada << endl;
+        graph = new Graph(entrada);
 
         graph->prim();
 //        graph->printAllDists();
@@ -302,8 +317,7 @@ int main() {
 //        graph->printAllNodes();
 
         graph->travelingSalesman();
-        graph->printBestPath();
-        graph->printBestPathToFile("output.txt");
+        graph->getBestCost(outputFile);
 
         delete(graph);
     }

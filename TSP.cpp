@@ -150,14 +150,16 @@ public:
         int cost[n+1]; // The minimum cost for one subtree to a given vertice
         int inSubTree[n+1]; // Checks if a given vertice is already on the prim's subtree
         priority_queue<ii, vector<ii>, greater<ii> > pq;
+        int parent[n+1];
 
         for(int i = 1; i <= n; i ++) {
             inSubTree[i] = false;
             cost[i] = INF;
         }
-        inSubTree[1] = true;
-        pq.push(make_pair(cost[1], 1));
-        int parent[n+1];
+        if(n != 0) {
+            inSubTree[1] = true;
+            pq.push(make_pair(cost[1], 1));
+        }
 
         while(!pq.empty()) {
             ii p = pq.top();
@@ -181,7 +183,6 @@ public:
             nodes[i]->addAdjs(nodes[parent[i]]);
             nodes[parent[i]]->addAdjs(nodes[i]);
         }
-
     }
 
     void travelingSalesman() {
@@ -190,8 +191,8 @@ public:
 
         for(int i = 1; i <= n; i ++)
             visited[i] = false;
-
-        pilha.push(1);
+        if(n != 0)
+            pilha.push(1);
 
         while(!pilha.empty()) {
             int u = pilha.top();
@@ -208,7 +209,8 @@ public:
                 }
             }
         }
-        visitedOrder.push_back(1); // Going back to the beginning
+        if(n != 0)
+            visitedOrder.push_back(1); // Going back to the beginning
     }
 
     void printBestPath() {
@@ -221,19 +223,16 @@ public:
         }
     }
 
-    void printBestPathToFile(const string &fileName) {
-        ofstream output("../" + fileName, ofstream::out);
-        for(int i = 0; i < (int)visitedOrder.size(); i ++) {
-            output << Debugger::convertIntToChar(visitedOrder[i]) << endl;
+    void printBestCostToFile(ofstream &output) {
+        long long int totalCost = 0;
+
+        if(n != 0) {
+            for (int i = 0; i < (int) visitedOrder.size() - 1; i++) {
+                totalCost += dist[visitedOrder[i]][visitedOrder[i + 1]];
+            }
+            totalCost += dist[visitedOrder[visitedOrder.size() - 1]][visitedOrder[0]];
         }
-        output.close();
-    }
-
-    void getBestCost(const string &fileName) {
-        ofstream output("../" + fileName, std::ofstream::out | std::ofstream::app);
-
-
-        output.close();
+        output << totalCost << endl;
     }
 
     void printAllNodes() {
@@ -286,6 +285,17 @@ public:
         }
     }
 
+    void printAllVisitedOrders() {
+        cout << "Visited Orders with size = " << (int) visitedOrder.size() << ":" << endl;
+        for(int i = 0; i < (int) visitedOrder.size(); i ++) {
+            if(i != (int) visitedOrder.size()-1)
+                cout << Debugger::convertIntToChar(visitedOrder[i]) << " -> ";
+            else
+                cout << Debugger::convertIntToChar(visitedOrder[i]) << endl;
+        }
+        cout << endl;
+    }
+
 private:
     int n;
     vector<Node*> nodes;
@@ -297,8 +307,9 @@ private:
 
 int main() {
     ios_base::sync_with_stdio(false);
-    string outputFile = "output.txt";
     Graph *graph;
+    ofstream output("../output.txt", std::ofstream::out);
+
     for(int i = 1; i < 100; i ++) {
         cout << "Execution i = " << i << endl;
         string entrada = "tests/ent";
@@ -308,7 +319,6 @@ int main() {
         entrada += to_string(i);
         entrada += ".txt";
 
-        cout << "Entrada = " << entrada << endl;
         graph = new Graph(entrada);
 
         graph->prim();
@@ -317,9 +327,11 @@ int main() {
 //        graph->printAllNodes();
 
         graph->travelingSalesman();
-        graph->getBestCost(outputFile);
+//        graph->printAllVisitedOrders();
+        graph->printBestCostToFile(output);
 
         delete(graph);
     }
+    output.close();
     return 0;
 }

@@ -308,11 +308,11 @@ private:
 int main() {
     ios_base::sync_with_stdio(false);
     Graph *graph;
-    ofstream output("../output.txt", std::ofstream::out);
+    ofstream output("../saida.txt", std::ofstream::out);
 
     for(int i = 1; i < 100; i ++) {
         cout << "Execution i = " << i << endl;
-        string entrada = "tests/ent";
+        string entrada = "ent";
         if(i < 10) {
             entrada += "0";
         }

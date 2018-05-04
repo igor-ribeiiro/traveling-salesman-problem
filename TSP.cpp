@@ -311,27 +311,18 @@ string getInputString(int i) {
         input += "0";
 
     input += s.str() + ".txt";
-    cout << "input = " << input << endl;
     return input;
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
     Graph *graph;
     ofstream output("saida.txt", std::ofstream::out);
 
     for(int i = 1; i < 100; i ++) {
-        cout << "Execution i = " << i << endl;
-
         graph = new Graph(getInputString(i));
 
         graph->prim();
-//        graph->printAllDists();
-//        graph->printAllEdges();
-//        graph->printAllNodes();
-
         graph->travelingSalesman();
-//        graph->printAllVisitedOrders();
         graph->printBestCostToFile(output);
 
         delete(graph);

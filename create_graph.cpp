@@ -9,7 +9,7 @@ using namespace std;
 
 int main() {
     ios_base::sync_with_stdio(false);
-    int size = rand() % 50 + 50;
+    int size = 25;
     ofstream input("../input.txt", ofstream::out);
     vector<int> vertices;
     vector<int> xs;
@@ -27,9 +27,9 @@ int main() {
         ys[i] = rand2;
     }
 
-    random_shuffle(vertices.begin(), vertices.end());
-    random_shuffle(xs.begin(), xs.end());
-    random_shuffle(ys.begin(), ys.end());
+    random_shuffle(vertices.begin()+1, vertices.end());
+    random_shuffle(xs.begin()+1, xs.end());
+    random_shuffle(ys.begin()+1, ys.end());
 
     input << size << endl;
     for(int i = 1; i <= size; i ++) {

@@ -297,9 +297,9 @@ int main() {
         graph = new Graph("input.txt");
 
         graph->prim();
-        graph->printAllDists();
-        graph->printAllEdges();
-        graph->printAllNodes();
+//        graph->printAllDists();
+//        graph->printAllEdges();
+//        graph->printAllNodes();
 
         graph->travelingSalesman();
         graph->printBestPath();

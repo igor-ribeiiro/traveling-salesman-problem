@@ -101,11 +101,9 @@ private:
 
 class Graph {
 public:
-    Graph(const string &fileName) {
+    explicit Graph(const string &fileName) {
         ifstream input;
-        string file = "../" + fileName;
-        input.open(file);
-
+        input.open(fileName.c_str(), ifstream::in);
         n = 0;
 
         if (input.is_open()) {
@@ -179,7 +177,7 @@ public:
         }
 
         for(int i = 2; i <= n; i ++) {
-            edges.emplace_back(Edge(i, parent[i], dist[i][parent[i]]));
+            edges.push_back(Edge(i, parent[i], dist[i][parent[i]]));
             nodes[i]->addAdjs(nodes[parent[i]]);
             nodes[parent[i]]->addAdjs(nodes[i]);
         }
@@ -304,22 +302,28 @@ private:
     vector<int> visitedOrder;
 };
 
+string getInputString(int i) {
+    string input = "ent";
+    ostringstream s;
+    s << i;
+
+    if(i < 10)
+        input += "0";
+
+    input += s.str() + ".txt";
+    cout << "input = " << input << endl;
+    return input;
+}
 
 int main() {
     ios_base::sync_with_stdio(false);
     Graph *graph;
-    ofstream output("../saida.txt", std::ofstream::out);
+    ofstream output("saida.txt", std::ofstream::out);
 
     for(int i = 1; i < 100; i ++) {
         cout << "Execution i = " << i << endl;
-        string entrada = "ent";
-        if(i < 10) {
-            entrada += "0";
-        }
-        entrada += to_string(i);
-        entrada += ".txt";
 
-        graph = new Graph(entrada);
+        graph = new Graph(getInputString(i));
 
         graph->prim();
 //        graph->printAllDists();

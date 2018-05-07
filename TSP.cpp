@@ -4,7 +4,8 @@
 #include <vector>
 #include <bits/stdc++.h>
 
-#define CHAR_DEBUG
+//#define CHAR_DEBUG
+//#define DEBUG
 
 #define INF 1000000000
 
@@ -42,8 +43,12 @@ public:
         this->ind = ind;
     }
 
-    void addAdjs(Node *n) {
-        adjs.push_back(n);
+    ~Node() {
+        adjs.clear();
+    }
+
+    void addAdjs(Node *n, int dist, int index) {
+        adjs.push_back(make_pair(dist, make_pair(index, n)));
     }
 
     int dist(Node *n) {
@@ -65,8 +70,16 @@ public:
         return y;
     }
 
-    vector<Node*> getAdjs() {
+    vector<pair<int, pair<int, Node*> > > getAdjs() {
         return adjs;
+    }
+
+    Node* getAdjNode(int i) {
+        return adjs[i].second.second;
+    }
+
+    void sortAdjs() {
+        sort(adjs.begin(), adjs.end());
     }
 
     void print() {
@@ -76,7 +89,7 @@ public:
 private:
     float x, y;
     int ind;
-    vector<Node*> adjs;
+    vector<pair<int, pair<int, Node*> > > adjs; // dist, index, node
 };
 
 class Edge {
@@ -177,9 +190,10 @@ public:
         }
 
         for(int i = 2; i <= n; i ++) {
-            edges.push_back(Edge(i, parent[i], dist[i][parent[i]]));
-            nodes[i]->addAdjs(nodes[parent[i]]);
-            nodes[parent[i]]->addAdjs(nodes[i]);
+            int d = dist[i][parent[i]];
+            edges.push_back(Edge(i, parent[i], d));
+            nodes[i]->addAdjs(nodes[parent[i]], d, parent[i]);
+            nodes[parent[i]]->addAdjs(nodes[i], d, i);
         }
     }
 
@@ -187,8 +201,10 @@ public:
         bool visited[n+1];
         stack<int> pilha;
 
-        for(int i = 1; i <= n; i ++)
+        for(int i = 1; i <= n; i ++) {
+            nodes[i]->sortAdjs();
             visited[i] = false;
+        }
         if(n != 0)
             pilha.push(1);
 
@@ -198,9 +214,8 @@ public:
             visited[u] = true;
             visitedOrder.push_back(u);
 
-            // Looping in reverse order to output the same solution as the one in the pdf
             for(int i = (int)nodes[u]->getAdjs().size()-1; i >= 0; i --) {
-                int ind = nodes[u]->getAdjs()[i]->getInd();
+                int ind = nodes[u]->getAdjNode(i)->getInd();
 
                 if(!visited[ind]) {
                     pilha.push(ind);
@@ -237,15 +252,19 @@ public:
         cout << endl;
 
         for(int i = 1; i <= n; i ++) {
-            cout << "Node #" << Debugger::convertIntToChar(i) << ": ";
+            cout << "Node #" << Debugger::convertIntToChar(nodes[i]->getInd()) << ": ";
             nodes[i]->print();
-            cout << ", with adjs = ";
+            cout << ", with adjs (dist, index, node) = ";
 
             for(int j = 0; j < (int)nodes[i]->getAdjs().size(); j ++) {
                 if(j != (int)nodes[i]->getAdjs().size()-1)
-                    cout << Debugger::convertIntToChar(nodes[i]->getAdjs()[j]->getInd()) << " ";
+                    cout << "(" << nodes[i]->getAdjs()[i].first << ")(" <<
+                         nodes[i]->getAdjs()[i].second.second << ")(" <<
+                         Debugger::convertIntToChar(nodes[i]->getAdjNode(j)->getInd()) << ") ";
                 else
-                    cout << Debugger::convertIntToChar(nodes[i]->getAdjs()[j]->getInd()) << endl;
+                    cout << "(" << nodes[i]->getAdjs()[i].first << ")(" <<
+                         nodes[i]->getAdjs()[i].second.second << ")(" <<
+                         Debugger::convertIntToChar(nodes[i]->getAdjNode(j)->getInd()) << ")" << endl;
             }
         }
 
@@ -303,6 +322,7 @@ private:
 };
 
 string getInputString(int i) {
+//    return "../ent10.txt";
     string input = "ent";
     ostringstream s;
     s << i;
@@ -324,6 +344,12 @@ int main() {
         graph->prim();
         graph->travelingSalesman();
         graph->printBestCostToFile(output);
+#ifdef DEBUG
+        graph->printAllNodes();
+        graph->printAllVisitedOrders();
+        graph->printAllEdges();
+#endif
+
 
         delete(graph);
     }

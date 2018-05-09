@@ -334,12 +334,21 @@ string getInputString(int i) {
     return input;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     Graph *graph;
     ofstream output("saida.txt", std::ofstream::out);
+    int numeroDeEntradas = 100;
 
-    for(int i = 1; i < 100; i ++) {
-        graph = new Graph(getInputString(i));
+    if(argc == 2) {
+        try {
+            numeroDeEntradas = atoi(argv[1]);
+        } catch (...) {
+            std::cout << "Invalid number of inputs m" << std::endl;
+        }
+    }
+
+    for(int i = 0; i < numeroDeEntradas; i ++) {
+        graph = new Graph(getInputString(i+1));
 
         graph->prim();
         graph->travelingSalesman();

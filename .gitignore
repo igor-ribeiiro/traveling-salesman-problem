@@ -1,6 +1,10 @@
 # Prerequisites
 *.d
 
+saida1.txt
+saida2.txt
+test_samples
+
 # IDE
 .idea
 cmake-build-debug

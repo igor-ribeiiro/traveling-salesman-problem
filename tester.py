@@ -11,7 +11,6 @@ float_precision = 2
 
 def program(name_1, name_2):
     os.system('mkdir ./test_samples')
-    os.system('clear')
     t3 = datetime.datetime.today()
     generate_samples('./')
     t1 = datetime.datetime.today()
@@ -79,3 +78,4 @@ if __name__ == "__main__":
     if len(sys.argv) > 3:
         max_size = int(sys.argv[3])
     program(name_1, name_2)
+    os.system('rm -r ./test_samples')

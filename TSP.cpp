@@ -161,7 +161,7 @@ public:
     void prim() {
         int cost[n+1]; // The minimum cost for one subtree to a given vertice
         int inSubTree[n+1]; // Checks if a given vertice is already on the prim's subtree
-        priority_queue<ii, vector<ii>, greater<ii> > pq;
+        priority_queue<pair<ii, int>, vector<pair<ii, int> >, greater<pair<ii, int> > > pq; // cost, parent, node
         int parent[n+1];
 
         for(int i = 1; i <= n; i ++) {
@@ -170,22 +170,23 @@ public:
         }
         if(n != 0) {
             inSubTree[1] = true;
-            pq.push(make_pair(cost[1], 1));
+            pq.push(make_pair(make_pair(cost[1], -1), 1));
         }
 
         while(!pq.empty()) {
-            ii p = pq.top();
-            pq.pop();
+            ii p = pq.top().first;
+            int u = pq.top().second;
             int d = p.first;
-            int u = p.second;
+            int dad = p.second;
+            pq.pop();
 
             inSubTree[u] = true;
 
             for(int v = 1; v <= n; v ++) {
                 if(!inSubTree[v] && cost[v] > dist[u][v]) {
                     cost[v] = dist[u][v];
-                    pq.push(make_pair(cost[v], v));
                     parent[v] = u;
+                    pq.push(make_pair(make_pair(cost[v], u), v));
                 }
             }
         }
@@ -338,7 +339,7 @@ string getInputString(int i) {
 int main(int argc, char *argv[]) {
     Graph *graph;
     ofstream output("saida.txt", std::ofstream::out);
-    int numeroDeEntradas = 100;
+    int numeroDeEntradas = 99;
 
     if(argc == 2) {
         try {

@@ -5,9 +5,9 @@
 #include <bits/stdc++.h>
 
 //#define CHAR_DEBUG
-#define DEBUG
+//#define DEBUG
 
-#define INF 10000000
+#define INF 1000000000
 
 using namespace std;
 
@@ -159,6 +159,7 @@ public:
     }
 
     void prim() {
+        if(n == 0) return;
         int cost[n+1]; // The minimum cost for one subtree to a given vertice
         int inSubTree[n+1]; // Checks if a given vertice is already on the prim's subtree
         priority_queue<pair<ii, int>, vector<pair<ii, int> >, greater<pair<ii, int> > > pq; // cost, parent, node
@@ -168,10 +169,10 @@ public:
             inSubTree[i] = false;
             cost[i] = INF;
         }
-        if(n != 0) {
-            inSubTree[1] = true;
-            pq.push(make_pair(make_pair(cost[1], -1), 1));
-        }
+
+        inSubTree[1] = true;
+        pq.push(make_pair(make_pair(cost[1], -1), 1));
+
 
         while(!pq.empty()) {
             ii p = pq.top().first;
@@ -207,30 +208,15 @@ public:
 
     void travelingSalesman() {
         bool visited[n+1];
-        stack<int> pilha;
+
+        if(n == 0) return;
 
         for(int i = 1; i <= n; i ++) {
             visited[i] = false;
         }
-        if(n != 0)
-            pilha.push(1);
+        travellingSalesmanRec(1, visited);
 
-        while(!pilha.empty()) {
-            int u = pilha.top();
-            pilha.pop();
-            visited[u] = true;
-            visitedOrder.push_back(u);
-
-            for(int i = 0; i < (int)nodes[u]->getAdjs().size(); i ++) {
-                int ind = nodes[u]->getAdjNode(i)->getInd();
-
-                if(!visited[ind]) {
-                    pilha.push(ind);
-                }
-            }
-        }
-        if(n != 0)
-            visitedOrder.push_back(1); // Going back to the beginning
+        visitedOrder.push_back(1); // Going back to the beginning
     }
 
     void printBestPath() {
@@ -319,6 +305,19 @@ public:
     }
 
 private:
+    void travellingSalesmanRec(int u, bool *visited) {
+        visited[u] = true;
+        visitedOrder.push_back(u);
+
+        for(int i = 0; i < (int)nodes[u]->getAdjs().size(); i ++) {
+            int ind = nodes[u]->getAdjNode(i)->getInd();
+
+            if(!visited[ind]) {
+                travellingSalesmanRec(ind, visited);
+            }
+        }
+    }
+
     int n;
     vector<Node*> nodes;
     vector<Edge> edges;

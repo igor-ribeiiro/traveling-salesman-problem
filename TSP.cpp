@@ -5,9 +5,9 @@
 #include <bits/stdc++.h>
 
 //#define CHAR_DEBUG
-//#define DEBUG
+#define DEBUG
 
-#define INF 1000000000
+#define INF 10000000
 
 using namespace std;
 
@@ -183,7 +183,13 @@ public:
             inSubTree[u] = true;
 
             for(int v = 1; v <= n; v ++) {
-                if(!inSubTree[v] && cost[v] > dist[u][v]) {
+                if(inSubTree[v]) continue;
+                if(cost[v] > dist[u][v]) {
+                    cost[v] = dist[u][v];
+                    parent[v] = u;
+                    pq.push(make_pair(make_pair(cost[v], u), v));
+                }
+                if(cost[v] == dist[u][v] and u < dad) {
                     cost[v] = dist[u][v];
                     parent[v] = u;
                     pq.push(make_pair(make_pair(cost[v], u), v));
@@ -204,7 +210,6 @@ public:
         stack<int> pilha;
 
         for(int i = 1; i <= n; i ++) {
-            nodes[i]->sortAdjs();
             visited[i] = false;
         }
         if(n != 0)
@@ -216,7 +221,7 @@ public:
             visited[u] = true;
             visitedOrder.push_back(u);
 
-            for(int i = (int)nodes[u]->getAdjs().size()-1; i >= 0; i --) {
+            for(int i = 0; i < (int)nodes[u]->getAdjs().size(); i ++) {
                 int ind = nodes[u]->getAdjNode(i)->getInd();
 
                 if(!visited[ind]) {
@@ -256,16 +261,14 @@ public:
         for(int i = 1; i <= n; i ++) {
             cout << "Node #" << Debugger::convertIntToChar(nodes[i]->getInd()) << ": ";
             nodes[i]->print();
-            cout << ", with adjs (dist, index, node) = ";
+            cout << ", with adjs (dist, node) = ";
 
             for(int j = 0; j < (int)nodes[i]->getAdjs().size(); j ++) {
                 if(j != (int)nodes[i]->getAdjs().size()-1)
-                    cout << "(" << nodes[i]->getAdjs()[i].first << ")(" <<
-                         nodes[i]->getAdjs()[i].second.second << ")(" <<
+                    cout << "(" << nodes[i]->getAdjs()[j].first << ")(" <<
                          Debugger::convertIntToChar(nodes[i]->getAdjNode(j)->getInd()) << ") ";
                 else
-                    cout << "(" << nodes[i]->getAdjs()[i].first << ")(" <<
-                         nodes[i]->getAdjs()[i].second.second << ")(" <<
+                    cout << "(" << nodes[i]->getAdjs()[j].first << ")(" <<
                          Debugger::convertIntToChar(nodes[i]->getAdjNode(j)->getInd()) << ")" << endl;
             }
         }

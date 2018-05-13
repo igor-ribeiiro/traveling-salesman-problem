@@ -7,7 +7,7 @@ import datetime
 max_size = 4
 only_max_size = False
 number_of_tests = 99
-max_float = 1000
+max_float = 10
 float_precision = 2
 
 def program(name_1, name_2):

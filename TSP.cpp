@@ -141,6 +141,7 @@ public:
         }
         else {
             cout << "File input not found" << endl;
+            cout << "File with name: " << fileName << endl;
             input.close();
             exit(1);
         }

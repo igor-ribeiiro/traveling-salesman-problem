@@ -4,7 +4,7 @@ import sys
 import datetime
 
 #Definitions
-max_size = 4
+max_size = 5
 only_max_size = False
 number_of_tests = 99
 max_float = 10
@@ -34,7 +34,7 @@ def program(name_1, name_2):
     result = ""
 
     for i in range(number_of_tests):
-        msg = lines_1[i].strip('\n') + " " + lines_2[i].strip('\n')
+        msg = "#" + str(i+1) + ": " + lines_1[i].strip('\n') + " " + lines_2[i].strip('\n')
         if lines_1[i].strip('\n') == lines_2[i].strip('\n'):
             add = "Passed"
         else:
@@ -51,7 +51,7 @@ def program(name_1, name_2):
     print(name_1 + " took " + t1 + "s and " + name_2 + " took " + t2 + "s")
 
     os.system('mv ./ent* ./test_samples/')
-    os.system('rm -r ./test_samples')
+    # os.system('rm -r ./test_samples')
 
 def generate_samples(path):
     for i in range(number_of_tests):

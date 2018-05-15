@@ -4,7 +4,7 @@
 #include <vector>
 #include <bits/stdc++.h>
 
-#define CHAR_DEBUG
+//#define CHAR_DEBUG
 #define DEBUG
 
 #define INF 1000000000
@@ -181,7 +181,17 @@ public:
             int dad = p.second;
             pq.pop();
 
+            if(!inSubTree[u]) {
+                int i = u;
+                int d = dist[i][parent[i]];
+                edges.push_back(Edge(i, parent[i], d));
+                nodes[i]->addAdjs(nodes[parent[i]], d, parent[i]);
+                nodes[parent[i]]->addAdjs(nodes[i], d, i);
+            }
+
             inSubTree[u] = true;
+
+
 
             for(int v = 1; v <= n; v ++) {
                 if(inSubTree[v]) continue;
@@ -198,12 +208,12 @@ public:
             }
         }
 
-        for(int i = 2; i <= n; i ++) {
-            int d = dist[i][parent[i]];
-            edges.push_back(Edge(i, parent[i], d));
-            nodes[i]->addAdjs(nodes[parent[i]], d, parent[i]);
-            nodes[parent[i]]->addAdjs(nodes[i], d, i);
-        }
+//        for(int i = 2; i <= n; i ++) {
+//            int d = dist[i][parent[i]];
+//            edges.push_back(Edge(i, parent[i], d));
+//            nodes[i]->addAdjs(nodes[parent[i]], d, parent[i]);
+//            nodes[parent[i]]->addAdjs(nodes[i], d, i);
+//        }
     }
 
     void travelingSalesman() {
@@ -213,6 +223,7 @@ public:
 
         for(int i = 1; i <= n; i ++) {
             visited[i] = false;
+//            nodes[i]->sortAdjs();
         }
         travellingSalesmanRec(1, visited);
 
@@ -239,6 +250,18 @@ public:
             totalCost += dist[visitedOrder[visitedOrder.size() - 1]][visitedOrder[0]];
         }
         output << totalCost << endl;
+    }
+
+    void printBestCost() {
+        long long int totalCost = 0;
+
+        if(n != 0) {
+            for (int i = 0; i < (int) visitedOrder.size() - 1; i++) {
+                totalCost += dist[visitedOrder[i]][visitedOrder[i + 1]];
+            }
+            totalCost += dist[visitedOrder[visitedOrder.size() - 1]][visitedOrder[0]];
+        }
+        cout << endl << "Total cost = " << totalCost << endl;
     }
 
     void printAllNodes() {
@@ -355,12 +378,20 @@ int main(int argc, char *argv[]) {
         graph = new Graph(getInputString(i+1));
 
         graph->prim();
+//#ifdef DEBUG
+//        cout << "With prim: " << endl;
+//        graph->printAllNodes();
+//        cout << endl;
+//#endif
         graph->travelingSalesman();
         graph->printBestCostToFile(output);
 #ifdef DEBUG
+        cout << "End of the algorithm" << endl;
+        graph->printAllDists();
         graph->printAllNodes();
         graph->printAllVisitedOrders();
         graph->printAllEdges();
+        graph->printBestCost();
 #endif
 
 

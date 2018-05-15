@@ -5,7 +5,7 @@
 #include <bits/stdc++.h>
 
 //#define CHAR_DEBUG
-#define DEBUG
+//#define DEBUG
 
 #define INF 1000000000
 
@@ -190,8 +190,6 @@ public:
             }
 
             inSubTree[u] = true;
-
-
 
             for(int v = 1; v <= n; v ++) {
                 if(inSubTree[v]) continue;

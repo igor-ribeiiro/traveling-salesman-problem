@@ -178,7 +178,7 @@ public:
             ii p = pq.top().first;
             int u = pq.top().second;
             int d = p.first;
-            int dad = p.second;
+//            int dad = p.second;
             pq.pop();
 
             if(!inSubTree[u]) {
@@ -192,13 +192,13 @@ public:
             inSubTree[u] = true;
 
             for(int v = 1; v <= n; v ++) {
-                if(inSubTree[v]) continue;
+                if(inSubTree[v] or v == u) continue;
                 if(cost[v] > dist[u][v]) {
                     cost[v] = dist[u][v];
                     parent[v] = u;
                     pq.push(make_pair(make_pair(cost[v], u), v));
                 }
-                if(cost[v] == dist[u][v] and u < dad) {
+                if(cost[v] == dist[u][v] and u < parent[v]) {
                     cost[v] = dist[u][v];
                     parent[v] = u;
                     pq.push(make_pair(make_pair(cost[v], u), v));
@@ -347,7 +347,7 @@ private:
 };
 
 string getInputString(int i) {
-//    return "../ent10.txt";
+//    return "../ent01.txt";
     string input = "ent";
     ostringstream s;
     s << i;

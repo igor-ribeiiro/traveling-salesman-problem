@@ -4,8 +4,8 @@
 #include <vector>
 #include <bits/stdc++.h>
 
-//#define CHAR_DEBUG
-//#define DEBUG
+#define CHAR_DEBUG
+#define DEBUG
 
 #define INF 1000000000
 

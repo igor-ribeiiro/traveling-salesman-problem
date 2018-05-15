@@ -51,7 +51,7 @@ def program(name_1, name_2):
     print(name_1 + " took " + t1 + "s and " + name_2 + " took " + t2 + "s")
 
     os.system('mv ./ent* ./test_samples/')
-    # os.system('rm -r ./test_samples')
+    os.system('rm -r ./test_samples')
 
 def generate_samples(path):
     for i in range(number_of_tests):

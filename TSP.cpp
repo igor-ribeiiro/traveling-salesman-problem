@@ -364,13 +364,8 @@ int main(int argc, char *argv[]) {
     ofstream output("saida.txt", std::ofstream::out);
     int numeroDeEntradas = 99;
 
-    if(argc == 2) {
-        try {
-            numeroDeEntradas = atoi(argv[1]);
-        } catch (...) {
-            std::cout << "Invalid number of inputs m" << std::endl;
-        }
-    }
+    std::cout << "Digite o número de entradas: ";
+    cin >> numeroDeEntradas;
 
     for(int i = 0; i < numeroDeEntradas; i ++) {
         graph = new Graph(getInputString(i+1));
